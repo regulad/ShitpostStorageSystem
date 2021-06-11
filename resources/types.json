@@ -3,4 +3,7 @@
     "gif": "image/gif",
     "png": "image/png",
     "mov": "image/quicktime",
+    "jpg": "image/jpeg",
+    "jpeg": "image/jpeg",
+
 }

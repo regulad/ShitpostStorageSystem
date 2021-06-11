@@ -23,7 +23,7 @@ async def post(request: web.Request):
         raise web.HTTPBadRequest(reason="Missing Content-Length header.")
     elif int(request.headers.get(hdrs.CONTENT_LENGTH)) > 5000000:
         raise web.HTTPRequestEntityTooLarge(reason="I don't want my hard drive to explode. Size limit is 5 megabytes.")
-    elif len(web.app["download_dir"]) >= 2000:
+    elif len(request.app["download_dir"]) >= 2000:
         raise web.HTTPInsufficientStorage(reason="2000 shitposts are present. You know the rules.")
 
     request_field = await request.multipart()
@@ -42,12 +42,16 @@ async def post(request: web.Request):
                 break
             writeable.write(chunk)
 
-    raise web.HTTPOk()  # Don't think this is right...
+    raise web.HTTPCreated()
 
 
 @routes.get("/shitposts")
 async def get(request: web.Request):
     files: list = os.listdir(request.app["download_dir"])
+
+    if len(files) == 0:
+        raise web.HTTPInternalServerError(reason="No shitposts have been uploaded yet. Be the first!")
+
     random_index: int = randint(0, len(files) - 1)
     with open(f"{request.app['download_dir']}{files[random_index]}", "rb") as file:
         try:
@@ -71,6 +75,9 @@ async def create_app():
 
     # Configure the app
     app["download_dir"] = os.environ.get("SSS_STORAGE", "downloads/")
+
+    if not os.path.exists(app["download_dir"]):
+        os.mkdir(app["download_dir"])
 
     # Routes
     app.add_routes(routes)

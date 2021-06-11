@@ -31,7 +31,10 @@ async def post(request: web.Request):
     shitpost = await request_field.next()
     assert shitpost.name == "shitpost"
 
-    extension: str = os.path.splitext(shitpost.filename)[1].strip(".")
+    extension: str = os.path.splitext(shitpost.filename)[1].strip(".").lower()
+
+    if CONTENT_TYPES.get(extension) is None:
+        raise web.HTTPUnsupportedMediaType
 
     with open(
             f"{request.app['download_dir']}{''.join(choice(ascii_letters) for _ in range(15))}.{extension}", "wb"

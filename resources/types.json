@@ -2,7 +2,8 @@
     "mp4": "video/mp4",
     "gif": "image/gif",
     "png": "image/png",
-    "mov": "image/quicktime",
+    "mov": "video/quicktime",
     "jpg": "image/jpeg",
-    "jpeg": "image/jpeg"
+    "jpeg": "image/jpeg",
+    "webm": "video/webm"
 }

@@ -1,0 +1,10 @@
+version: '3'
+services:
+  shitpost-api:
+    image: docker.pkg.github.com/regulad/shitpoststoragesystem/shitpost-storage-system:latest
+    ports:
+      - 8082:8082/tcp
+    volumes:
+      - downloads:/app/downloads
+volumes:
+  downloads:
